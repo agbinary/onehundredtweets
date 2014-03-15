@@ -17,21 +17,21 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 twitter_db = Mysql2::Client.new(host: "localhost", username: "root", password: "573300", database: "tweets")
 
-def agregardb (client, user, db)
+def add_db (client, user, db)
   client.user_timeline(user, :count => 100).each do |tweet|
   h="INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{user}', '#{tweet.text.gsub(/'/, " ")}')";
   db.query h
   end
 end
 
-def crearmensaje(db)
+def create_message(db)
   result=db.query "SELECT * FROM tweet"
-  todos=""
-  result.each {|x| todos << x["tweet"] + "<br>"}
-  todos
+  all=""
+  result.each {|x| all << x["tweet"] + "<br>"}
+  all
 end
 
-def enviarcorreo(user, email, mensaje)
+def send_email(user, email, mensaje)
   url = "https://sendgrid.com/api/mail.send.json"
   response = HTTParty.post url, :body => {
       "api_user" => ENV["SENDGRID_USER"],
@@ -54,11 +54,11 @@ begin
 rescue Twitter::Error::NotFound
   puts "El usuario no existe";
 else
-  agregardb(client, user, twitter_db)
-  mensaje=crearmensaje(twitter_db)
+  add_db(client, user, twitter_db)
+  message=create_message(twitter_db)
   puts "\nA que e-mail desea enviar la base de datos? "
   email=gets.chomp
-  enviarcorreo(user, email, mensaje)
+  send_email(user, email, message)
 
 end
 
