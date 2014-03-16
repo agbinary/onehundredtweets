@@ -1,3 +1,4 @@
+
 require 'rubygems'
 require 'oauth'
 require 'twitter'
@@ -17,33 +18,43 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 twitter_db = Mysql2::Client.new(host: "localhost", username: "root", password: "573300", database: "tweets")
 
-def add_db (client, user, db)
-  client.user_timeline(user, :count => 100).each do |tweet|
-  h="INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{user}', '#{tweet.text.gsub(/'/, " ")}')";
-  db.query h
+class OneHundredTwitter
+
+  def initialize(client, user, db, email)
+    @client=client
+    @user=user
+    @db=db
+    @email=email
+    @message=""
   end
-end
 
-def create_message(db)
-  result=db.query "SELECT * FROM tweet"
-  all=""
-  result.each {|x| all << x["tweet"] + "<br>"}
-  all
-end
+  def add_db
+    @client.user_timeline(@user, :count => 100).each do |tweet|
+    h="INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{@user}', '#{tweet.text.gsub(/'/, " ")}')";
+    @db.query h
+    end
+  end
 
-def send_email(user, email, mensaje)
-  url = "https://sendgrid.com/api/mail.send.json"
-  response = HTTParty.post url, :body => {
-      "api_user" => ENV["SENDGRID_USER"],
-      "api_key" => ENV["SENDGRID_TOKEN"],
-      "to" => email,
-      "from" => "ang3l_gu@hotmail.com",
-      "subject" => "OneHundredTweets",
-      "html" => "Estos son los ultimos 100 tweets del usuario #{user}: <p><p> " + mensaje
+  def create_message
+    result=@db.query "SELECT * FROM tweet"
+    @message=result.each {|x| @message << x["tweet"] + "<br>"}
 
-  }
-  response.body
-  puts "El e-mail fue enviado"
+  end
+
+  def send_email
+    url = "https://sendgrid.com/api/mail.send.json"
+    response = HTTParty.post url, :body => {
+        "api_user" => ENV["SENDGRID_USER"],
+        "api_key" => ENV["SENDGRID_TOKEN"],
+        "to" => @email,
+        "from" => "ang3l_gu@hotmail.com",
+        "subject" => "OneHundredTweets",
+        "html" => "Estos son los ultimos 100 tweets del usuario #{@user}: <p><p> " + @message
+
+    }
+    response.body
+    puts "El e-mail fue enviado"
+  end
 end
 
 puts "De que usuario quiere guardar los ultimos 100 tweets? "
@@ -54,14 +65,13 @@ begin
 rescue Twitter::Error::NotFound
   puts "El usuario no existe";
 else
-  add_db(client, user, twitter_db)
-  message=create_message(twitter_db)
   puts "\nA que e-mail desea enviar la base de datos? "
   email=gets.chomp
-  send_email(user, email, message)
-
+  p=OneHundredTwitter.new(client, user, twitter_db, email)
+  p.add_db
+  p.create_message
+  p.send_email
 end
-
 
 
 
