@@ -20,22 +20,22 @@ twitter_db = Mysql2::Client.new(host: "localhost", username: "root", password: "
 class OneHundredTwitter
 
   def initialize(client, user, db, email)
-    @client=client
-    @user=user
-    @db=db
-    @email=email
-    @message=""
+    @client = client
+    @user = user
+    @db = db
+    @email = email
+    @message = ""
   end
 
   def add_db
     @client.user_timeline(@user, :count => 100).each do |tweet|
-    h="INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{@user}', '#{tweet.text.gsub(/'/, " ")}')";
+    h = "INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{@user}', '#{tweet.text.gsub(/'/, " ")}')";
     @db.query h
     end
   end
 
   def create_message
-    result=@db.query "SELECT * FROM tweet"
+    result = @db.query "SELECT * FROM tweet"
     result.each {|x| @message << x["tweet"] + "<br>"}
   end
 
@@ -56,7 +56,7 @@ class OneHundredTwitter
 end
 
 puts "De que usuario quiere guardar los ultimos 100 tweets? "
-user=gets.chomp
+user = gets.chomp
 
 begin
   client.user_timeline(user)
@@ -64,14 +64,14 @@ rescue Twitter::Error::NotFound
   puts "El usuario no existe";
 else
   puts "\nA que e-mail desea enviar la base de datos? "
-  email=gets.chomp
-  p=OneHundredTwitter.new(client, user, twitter_db, email)
+  email = gets.chomp
+  p = OneHundredTwitter.new(client, user, twitter_db, email)
   p.add_db
   p.create_message
   p.send_email
 end
 
-
+ 
 
 
 
