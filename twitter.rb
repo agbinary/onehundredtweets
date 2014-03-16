@@ -1,4 +1,3 @@
-
 require 'rubygems'
 require 'oauth'
 require 'twitter'
@@ -37,8 +36,7 @@ class OneHundredTwitter
 
   def create_message
     result=@db.query "SELECT * FROM tweet"
-    @message=result.each {|x| @message << x["tweet"] + "<br>"}
-
+    result.each {|x| @message << x["tweet"] + "<br>"}
   end
 
   def send_email
@@ -50,8 +48,8 @@ class OneHundredTwitter
         "from" => "ang3l_gu@hotmail.com",
         "subject" => "OneHundredTweets",
         "html" => "Estos son los ultimos 100 tweets del usuario #{@user}: <p><p> " + @message
-
     }
+
     response.body
     puts "El e-mail fue enviado"
   end
