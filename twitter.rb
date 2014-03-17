@@ -4,7 +4,6 @@ require 'twitter'
 require 'json'
 require 'mysql2'
 require 'httparty'
-require './env'
 
 
 class OneHundredTwitter
