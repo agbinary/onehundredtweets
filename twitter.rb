@@ -28,8 +28,8 @@ class OneHundredTwitter
 
   def add_db
     @client.user_timeline(@user, :count => 100).each do |tweet|
-     query = "INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{@user}', '#{tweet.text.gsub(/'/, " ")}')";
-     @db.query(query)
+      query = "INSERT INTO tweets.tweet (user, tweet) VALUES ( '#{@user}', '#{tweet.text.gsub(/'/, " ")}')";
+      @db.query(query)
     end
   end
 
