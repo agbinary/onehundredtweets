@@ -44,16 +44,3 @@ class OneHundredTwitter
     puts "El e-mail fue enviado"
   end
 end
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> d93847dc1c0dd81bf24fa685d85c3081bdbd7f87
