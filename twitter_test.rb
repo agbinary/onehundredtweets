@@ -1,8 +1,8 @@
-require './twitter'
-require 'minitest/autorun'
+require "./twitter"
+require "minitest/autorun"
 require "mocha/mini_test"
 
-class OneHundredTwitterTest < MiniTest::Test
+class OneHunderdTwitterTest < Minitest::Test
   def test_add_db
     client = mock
     tweet = mock
@@ -20,15 +20,10 @@ class OneHundredTwitterTest < MiniTest::Test
     client = mock
     db = mock
 
-    db.expects(:query).with("SELECT * FROM tweet").returns([{'tweet' => 'Hello, Angie'}])
+    db.expects(:query).with("SELECT * FROM tweet").returns([{"tweet" => "Hello, Angie"}])
 
     app = OneHundredTwitter.new(client, 'guille', db, 'angie@gmail.com')
 
     assert_equal "Hello, Angie<br>", app.create_message
-
-  end
-  def test_send_email
-
-
   end
 end

@@ -1,4 +1,8 @@
 require "./twitter"
+<<<<<<< HEAD
+=======
+require './env'
+>>>>>>> d93847dc1c0dd81bf24fa685d85c3081bdbd7f87
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -25,4 +29,8 @@ else
   p.add_db
   message = p.create_message
   p.send_email(message)
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> d93847dc1c0dd81bf24fa685d85c3081bdbd7f87

@@ -4,7 +4,6 @@ require 'twitter'
 require 'json'
 require 'mysql2'
 require 'httparty'
-require './env'
 
 
 class OneHundredTwitter
@@ -45,6 +44,7 @@ class OneHundredTwitter
     puts "El e-mail fue enviado"
   end
 end
+<<<<<<< HEAD
 
 
 
@@ -55,3 +55,5 @@ end
 
 
 
+=======
+>>>>>>> d93847dc1c0dd81bf24fa685d85c3081bdbd7f87
